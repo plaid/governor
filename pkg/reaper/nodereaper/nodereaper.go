@@ -50,6 +50,7 @@ const (
 	reapUnknownDisabledLabelKey = "governor.keikoproj.io/reap-unknown-disabled"
 	reapFlappyDisabledLabelKey  = "governor.keikoproj.io/reap-flappy-disabled"
 	reapOldDisabledLabelKey     = "governor.keikoproj.io/reap-old-disabled"
+	karpenterRegisteredLabelKey = "karpenter.sh/registered"
 
 	// NodeReaperResultMetricName is the metric name of the node reaper result
 	NodeReaperResultMetricName = "governor_node_reaper_result"
@@ -432,7 +433,11 @@ func (ctx *ReaperContext) deriveFlappyDrainReapableNodes() error {
 			if nodeIsFlappy(events, nodeName, countThreshold, "NodeReady") && !hasSkipLabel(node, reapFlappyDisabledLabelKey) {
 				log.Infof("node %v is drain-reapable !! State = ReadinessFlapping", nodeName)
 				ctx.addDrainable(nodeName, nodeInstanceID)
-				ctx.addReapable(nodeName, nodeInstanceID, ctx.AsgValidation)
+				if hasKarpenterLabel(nodeName, ctx.KubernetesClient) {
+					ctx.addReapable(nodeName, nodeInstanceID, true)
+				} else {
+					ctx.addReapable(nodeName, nodeInstanceID, ctx.AsgValidation)
+				}
 			}
 		}
 	}
@@ -571,7 +576,7 @@ func (ctx *ReaperContext) reapOldNodes(gctx context.Context, w ReaperAwsAuth) er
 			}
 		}
 
-		if ctx.AsgValidation {
+		if ctx.AsgValidation && !hasKarpenterLabel(instance.NodeName, ctx.KubernetesClient) {
 			// Skip nodes which are on unstable ASG
 			stable, err := autoScalingGroupIsStable(w, instance.InstanceID)
 			if err != nil {
@@ -707,7 +712,7 @@ func (ctx *ReaperContext) reapUnhealthyNodes(gctx context.Context, w ReaperAwsAu
 			continue
 		}
 
-		if ctx.AsgValidation && instance.RequiresValidation {
+		if ctx.AsgValidation && instance.RequiresValidation && !hasKarpenterLabel(instance.NodeName, ctx.KubernetesClient) {
 			// Skip nodes which are on unstable ASG
 			stable, err := autoScalingGroupIsStable(w, instance.InstanceID)
 			if err != nil {

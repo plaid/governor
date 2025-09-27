@@ -187,7 +187,7 @@ func (ctx *ReaperContext) handleReapableDisruptionBudgets(gctx context.Context) 
 		}
 		err = ctx.publishEvent(gctx, pdb, EventReasonPodDisruptionBudgetDeleted, EventMessageDeletedFmt)
 		if err != nil {
-			log.Warnf(err.Error())
+			log.Warnf("%s", err.Error())
 		}
 		ctx.ReapedPodDisruptionBudgetCount++
 		ctx.exposeMetric(pdb, EventReasonPodDisruptionBudgetDeleted, 1)
@@ -222,7 +222,7 @@ func (ctx *ReaperContext) handleBlockingDisruptionBudgets(gctx context.Context) 
 					ctx.addReapablePodDisruptionBudget(pdb)
 					err = ctx.publishEvent(gctx, pdb, EventReasonBlockingDetected, EventMessageBlockingFmt)
 					if err != nil {
-						log.Warnf(err.Error())
+						log.Warnf("%s", err.Error())
 					}
 					ctx.exposeMetric(pdb, EventReasonBlockingDetected, 1)
 				} else {
@@ -236,7 +236,7 @@ func (ctx *ReaperContext) handleBlockingDisruptionBudgets(gctx context.Context) 
 					ctx.addReapablePodDisruptionBudget(pdb)
 					err = ctx.publishEvent(gctx, pdb, EventReasonBlockingCrashLoopDetected, EventMessageCrashLoopFmt)
 					if err != nil {
-						log.Warnf(err.Error())
+						log.Warnf("%s", err.Error())
 					}
 					ctx.exposeMetric(pdb, EventReasonBlockingCrashLoopDetected, 1)
 				} else {
@@ -252,7 +252,7 @@ func (ctx *ReaperContext) handleBlockingDisruptionBudgets(gctx context.Context) 
 					ctx.addReapablePodDisruptionBudget(pdb)
 					err = ctx.publishEvent(gctx, pdb, EventReasonBlockingNotReadyStateDetected, EventMessageNotReadyFmt)
 					if err != nil {
-						log.Warnf(err.Error())
+						log.Warnf("%s", err.Error())
 					}
 					ctx.exposeMetric(pdb, EventReasonBlockingNotReadyStateDetected, 1)
 				} else {
@@ -298,7 +298,7 @@ func (ctx *ReaperContext) handleMultipleDisruptionBudgets(gctx context.Context) 
 			for _, pdb := range pdbs {
 				err := ctx.publishEvent(gctx, pdb, EventReasonMultipleDetected, EventMessageMultipleFmt)
 				if err != nil {
-					log.Warnf(err.Error())
+					log.Warnf("%s", err.Error())
 				}
 				ctx.exposeMetric(pdb, EventReasonMultipleDetected, 1)
 			}

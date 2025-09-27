@@ -1,15 +1,15 @@
-FROM --platform=$BUILDPLATFORM golang:1.21-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:1.25-alpine AS builder
 
 ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
-ENV KUBECTL_VERSION 1.25.15
+ENV KUBECTL_VERSION 1.30.10
 
 WORKDIR /go/src/github.com/keikoproj/governor
 COPY . .
 RUN apk update && apk add --no-cache build-base make git ca-certificates && update-ca-certificates
-ADD https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/${TARGETOS}/${TARGETARCH}/kubectl /usr/local/bin/kubectl
+ADD https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/${TARGETOS}/${TARGETARCH}/kubectl /usr/local/bin/kubectl
 RUN chmod 777 /usr/local/bin/kubectl
 RUN make build
 
