@@ -1,3 +1,7 @@
+# 0.5.0-plaid-1
+
+[enhancement] Pull in upstream version 0.5.0
+
 # 0.4.1-plaid-19
 
 [bugfix] Fix a panic in reaping unhealthy nodes
