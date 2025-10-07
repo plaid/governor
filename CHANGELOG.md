@@ -1,3 +1,7 @@
+# 0.5.0-plaid-2
+
+[enhancement] Log more info when a drain times out
+
 # 0.5.0-plaid-1
 
 [enhancement] Pull in upstream version [0.5.0](https://github.com/keikoproj/governor/releases/tag/v0.5.0)
