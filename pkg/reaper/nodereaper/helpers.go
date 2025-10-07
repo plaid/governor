@@ -218,6 +218,21 @@ func (ctx *ReaperContext) drainNode(gctx context.Context, name string, dryRun bo
 		logMsg := fmt.Sprintf("failed to drain node: %v", name)
 		if err.Error() == "command execution timed out" {
 			logMsg = fmt.Sprintf("%s, drain command timed-out", logMsg)
+
+			nodeJSON, err := ctx.describeNode(name)
+			if err != nil {
+				log.Errorf("failed to describe node %v after drain timeout", name)
+			} else {
+				log.Infof("node description after drain timeout: %s", nodeJSON)
+			}
+
+			events, err := ctx.getEvents(name)
+			if err != nil {
+				log.Errorf("failed to get events about node %v after drain timeout", name)
+			} else {
+				log.Infof("events after drain timeout: %s", events)
+			}
+
 			ctx.annotateNode(name, ageUnreapableAnnotationKey, getUTCNowStr())
 		}
 		log.Warn(logMsg)
