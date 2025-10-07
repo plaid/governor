@@ -220,7 +220,7 @@ func (ctx *ReaperContext) drainNode(gctx context.Context, name string, dryRun bo
 			logMsg = fmt.Sprintf("%s, drain command timed-out", logMsg)
 			ctx.annotateNode(name, ageUnreapableAnnotationKey, getUTCNowStr())
 		}
-		log.Warnf(logMsg)
+		log.Warn(logMsg)
 		ctx.uncordonNode(name, dryRun, ctx.IgnoreFailure)
 		if !ctx.IgnoreFailure && ctx.DeregisterFromLoadBalancer {
 			ctx.removeLabelFromNode(name, v1.LabelNodeExcludeBalancers)
