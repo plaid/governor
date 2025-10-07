@@ -1,6 +1,6 @@
 # 0.5.0-plaid-1
 
-[enhancement] Pull in upstream version 0.5.0
+[enhancement] Pull in upstream version [0.5.0](https://github.com/keikoproj/governor/releases/tag/v0.5.0)
 
 # 0.4.1-plaid-19
 
